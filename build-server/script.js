@@ -1,7 +1,19 @@
 const { exec } = require('child_process')
 const path = require('path')
 const fs = require('fs')
+const { S3Client, PutObjectCommand gg } = require('@aws-sdk/client-s3')
+const mime = require('mime-types')
 
+//TODO:connect aws client
+const s3Client = new S3Client({
+  credentials: {
+    region: '',
+    accessKeyId: '',
+    secretAccessKey: ''
+  }
+})
+
+const PROJECT_ID = process.env.PROJECT_ID
 async function init() {
   console.log('Executing script.js')
   const outDirPath = path.join(__dirname, 'output')
@@ -24,6 +36,16 @@ async function init() {
     })
     for (const filePath of distFolderContents) {
       if (fs.lstatSync(filePath).isDirectory()) continue;
+
+      const command = new PutObjectCommand({
+        Bucket: '',
+        Key: `__output/${PROJECT_ID}/${filePath}`,
+        Body: fs.createReadStream(filePath),
+        ContentType: mime.lookup(filePath)
+      })
+
+      await s3Client.send(command)
     }
+    console.log('Done...')
   })
 }
