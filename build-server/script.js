@@ -1,15 +1,16 @@
 const { exec } = require('child_process')
 const path = require('path')
 const fs = require('fs')
-const { S3Client, PutObjectCommand gg } = require('@aws-sdk/client-s3')
+const { S3Client, PutObjectCommand } = require('@aws-sdk/client-s3')
 const mime = require('mime-types')
+require('dotenv').config();
 
 //TODO:connect aws client
 const s3Client = new S3Client({
+  region: ap - south - 1
   credentials: {
-    region: ,
     accessKeyId: ,
-    secretAccessKey:
+    secretAccessKey: process.env.SECRETACCESSKEY
   }
 })
 
@@ -34,7 +35,8 @@ async function init() {
     const distFolderContents = fs.readdirSync(distFolderPath, {
       recursive: true
     })
-    for (const filePath of distFolderContents) {
+    for (const file of distFolderContents) {
+      const filePath = path.join(distFolderPath, file)
       if (fs.lstatSync(filePath).isDirectory()) continue;
       console.log('uploading', filePath)
       const command = new PutObjectCommand({
@@ -44,8 +46,12 @@ async function init() {
         ContentType: mime.lookup(filePath)
       })
 
-      await s3Client.send(command)
-      console.log('uploaded', filePath)
+      try {
+        await s3Client.send(command)
+        console.log('uploaded', filePath)
+      } catch (error) {
+        console.error('Error uploading file:', error)
+      }
     }
     console.log('Done...')
   })
