@@ -7,9 +7,9 @@ const mime = require('mime-types')
 //TODO:connect aws client
 const s3Client = new S3Client({
   credentials: {
-    region: '',
-    accessKeyId: '',
-    secretAccessKey: ''
+    region: ,
+    accessKeyId: ,
+    secretAccessKey:
   }
 })
 
@@ -36,16 +36,19 @@ async function init() {
     })
     for (const filePath of distFolderContents) {
       if (fs.lstatSync(filePath).isDirectory()) continue;
-
+      console.log('uploading', filePath)
       const command = new PutObjectCommand({
-        Bucket: '',
+        Bucket: 'vercel-clone-1115',
         Key: `__output/${PROJECT_ID}/${filePath}`,
         Body: fs.createReadStream(filePath),
         ContentType: mime.lookup(filePath)
       })
 
       await s3Client.send(command)
+      console.log('uploaded', filePath)
     }
     console.log('Done...')
   })
 }
+
+init()
