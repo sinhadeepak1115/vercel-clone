@@ -7,10 +7,10 @@ require('dotenv').config();
 
 //TODO:connect aws client
 const s3Client = new S3Client({
-  region: ap - south - 1
+  region: ,
   credentials: {
-    accessKeyId: ,
-    secretAccessKey: process.env.SECRETACCESSKEY
+    accessKeyId:,
+    secretAccessKey: 
   }
 })
 
@@ -41,7 +41,7 @@ async function init() {
       console.log('uploading', filePath)
       const command = new PutObjectCommand({
         Bucket: 'vercel-clone-1115',
-        Key: `__output/${PROJECT_ID}/${filePath}`,
+        Key: `__output/${PROJECT_ID}/${file}`,
         Body: fs.createReadStream(filePath),
         ContentType: mime.lookup(filePath)
       })
