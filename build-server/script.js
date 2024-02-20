@@ -9,7 +9,7 @@ require('dotenv').config();
 const s3Client = new S3Client({
   region: ,
   credentials: {
-    accessKeyId:,
+    accessKeyId: ,
     secretAccessKey: 
   }
 })
